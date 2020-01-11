@@ -31,7 +31,7 @@
               <td class="align-middle">
                 <button
                   style="border:none; background-color:white"
-                  @click="editRun(name)"
+                  @click="editRun(run.id)"
                 >
                   🔄
                 </button>
@@ -50,25 +50,14 @@
       </div>
 
       <dialog id="editRunsDialog">
-        <form @submit.prevent="updateRuns" method="dialog">
+        <form @submit.prevent="updateRuns(run.id)" method="dialog">
           <input
             v-model="editName"
             type="text"
             class="form-control"
             placeholder="nome"
           />
-          <input
-            v-model="editMinutes"
-            type="number"
-            class="form-control"
-            placeholder="minutes"
-          />
-          <input
-            v-model="editPlace"
-            type="text"
-            class="form-control"
-            placeholder="local"
-          />
+
           <br />
           <button
             style="border:none; background-color: #555555; color:white"
@@ -76,11 +65,7 @@
           >
             Gravar
           </button>
-          <button
-            style="border:none; background-color: white"
-            @click="close()"
-            type="submit"
-          >
+          <button style="border:none; background-color: white" @click="close()">
             Fechar
           </button>
         </form>
@@ -93,9 +78,8 @@
 <script>
 export default {
   data: () => ({
-    editName: "",
-    editMinutes: "",
-    editPlace: ""
+    editId: 0,
+    editName: ""
   }),
   created: function() {
     if (localStorage.getItem("runs")) {
@@ -109,19 +93,16 @@ export default {
     editRun(id) {
       document.getElementById("editRunsDialog").showModal();
 
-      const run = this.runs.map(run => run.id === id)[0];
+      const run = this.$store.state.runs.filter(run => run.id === id)[0];
+      this.editId = run.id;
       this.editName = run.name;
-      this.editMinutes = run.minutes;
-      this.editPlace = run.place;
     },
-    updateRuns() {
-      this.runs.map(run => {
-        if (run.id === this.editId) {
-          (run.name == this.editName) &
-            (run.minutes == this.editMinutes) &
-            (run.place == this.editPlace);
-        }
+    updateRuns(id) {
+      this.state.commit("UPDATE_RUN", {
+        editId: id,
+        editName: name
       });
+
       document.getElementById("editRunsDialog").close();
     },
     removeRun(name1) {
@@ -143,7 +124,7 @@ export default {
       });
     },
     saveStorage() {
-      localStorage.setItem("runs", JSON.stringify(this.runs));
+      localStorage.setItem("runs", JSON.stringify(this.$store.state.runs));
     }
   }
 };

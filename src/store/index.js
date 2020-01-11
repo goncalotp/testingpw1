@@ -46,13 +46,18 @@ export default new Vuex.Store({
     },
 
     REMOVE_RUN(state, payload) {
-      state.runs = state.runs.filter(
-        run => run.name !== payload.name
-      );
+      state.runs = state.runs.filter(run => run.name !== payload.name);
       localStorage.setItem("runs", JSON.stringify(this.state.runs));
     },
     ORDER_BY_NAME(state, payload) {
       state.runs.sort(payload.compare);
+    },
+
+    UPDATE_RUN(state, payload) {
+      if (state.runs.some(runs => runs.id === payload.id)) {
+        state.runs[payload.id].name = payload.name;
+      }
+      localStorage.setItem("runs", JSON.stringify(this.state.runs));
     }
   }
 });
