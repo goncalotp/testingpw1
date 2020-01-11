@@ -1,6 +1,10 @@
 <template>
-  <div style="text-align:center">
-        <a><router-link style="color: black; text-decoration: none;" to="/home">Menu</router-link></a>
+  <div id="app" class="" style="text-align:center">
+    <a
+      ><router-link style="color: black; text-decoration: none;" to="/home"
+        >Menu</router-link
+      ></a
+    >
     <div class="container">
       <br />
       <br />
@@ -24,7 +28,7 @@
             <tr
               style="text-align:center"
               v-for="run in this.$store.state.runs"
-              v-bind:key="run"
+              :key="run.id"
             >
               <td class="align-middle">{{ run.name }}</td>
               <td class="align-middle">{{ run.minutes }}</td>
@@ -40,7 +44,7 @@
               <td class="align-middle">
                 <button
                   style="border:none; background-color:white"
-                  @click="removeRun(run.name)"
+                  @click="removeRun(run.id)"
                 >
                   🗑️
                 </button>
@@ -53,19 +57,19 @@
       <dialog id="editRunsDialog">
         <form @submit.prevent="updateRuns" method="dialog">
           <input
-            v-model="name"
+            v-model="editName"
             type="text"
             class="form-control"
             placeholder="nome"
           />
           <input
-            v-model="minutes"
+            v-model="editMinutes"
             type="number"
             class="form-control"
             placeholder="minutes"
           />
           <input
-            v-model="place"
+            v-model="editPlace"
             type="text"
             class="form-control"
             placeholder="local"
@@ -93,6 +97,11 @@
 </template>
 <script>
 export default {
+  data: () => ({
+    editName: "",
+    editMinutes: "",
+    editPlace: ""
+  }),
   created: function() {
     if (localStorage.getItem("runs")) {
       this.$store.state.runs = JSON.parse(localStorage.getItem("runs"));
@@ -102,10 +111,23 @@ export default {
     close() {
       document.getElementById("editRunsDialog").close();
     },
-    editRun() {
+    editRun(id) {
       document.getElementById("editRunsDialog").showModal();
+
+      const run = this.runs.map(run => run.form.id === id)[0];
+      this.editId = run.form.id;
+      this.editName = run.form.name;
+      this.editMinutes = run.form.minutes;
+      this.editPlace = run.form.place;
     },
-    updateRuns() {},
+    updateRuns() {
+      this.runs.map(run => {
+        if (run.form.id === this.editId) {
+          run.form.name = this.editName;
+        }
+      });
+      document.getElementById("editRunsDialog").close();
+    },
     removeRun(name1) {
       if (confirm("Deseja mesmo remover a corrida?")) {
         this.$store.commit("REMOVE_RUN", {
@@ -129,6 +151,9 @@ export default {
       this.$store.commit("ORDER_BY_NAME", {
         compare: this.compareName
       });
+    },
+    saveStorage() {
+      localStorage.setItem("runs", JSON.stringify(this.runs));
     }
   }
 };

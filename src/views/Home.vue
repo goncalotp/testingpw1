@@ -36,33 +36,9 @@
 
 <script>
 export default {
-  data: () => ({
-    name: "",
-    email: "",
-    password: "",
-    confPassword: ""
-  }),
-  created: function() {
-    window.addEventListener("unload", this.saveStorage);
-    if (localStorage.getItem("users")) {
-      this.$store.state.users = JSON.parse(localStorage.getItem("users"));
-    }
-    if (localStorage.getItem("loggedUser")) {
-      this.$store.state.loggedUser = JSON.parse(
-        localStorage.getItem("loggedUser")
-      );
-    }
-  },
-  methods: {
-    addUser() {
-      this.$store.commit("ADD_USER", {
-        email: this.email,
-        name: this.name,
-        password: this.password,
-        confPassword: this.confPassword
-      });
-    }
-  }
+  data: () => ({}),
+
+  methods: {}
 };
 </script>
 

@@ -8,21 +8,19 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     runs: [
-      {
-        name: "corrida",
-        minutes: "30",
-        place: "porto"
-      }
+      
+
     ]
   },
   getters: {},
   mutations: {
     REGISTER(state, payload) {
-      if (!state.runs.some(runs => runs.name === payload.name)) {
+      if (!state.runs.some(runs => runs.form.name === payload.form.name)) {
         state.runs.push({
-          name: payload.name,
-          minutes: payload.minutes,
-          place: payload.place
+          id: payload.form.id,
+          name: payload.form.name,
+          minutes: payload.form.minutes,
+          place: payload.form.place
         });
         localStorage.setItem("runs", JSON.stringify(this.state.runs));
         Swal.fire({
@@ -44,7 +42,7 @@ export default new Vuex.Store({
     },
 
     REMOVE_RUN(state, payload) {
-      state.runs = state.runs.filter(run => run.name !== payload.name);
+      state.runs = state.runs.filter(run => run.form.name !== payload.form.name);
       localStorage.setItem("runs", JSON.stringify(this.state.runs));
     },
     ORDER_BY_NAME(state, payload) {

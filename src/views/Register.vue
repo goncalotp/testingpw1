@@ -25,7 +25,7 @@
                 id="registerName"
                 placeholder="Insira o seu nome da corrida"
                 required
-                v-model="name"
+                v-model="form.name"
               />
             </div>
             <div class="form-group">
@@ -37,7 +37,7 @@
                 aria-describedby="emailHelp"
                 placeholder="minutos"
                 required
-                v-model="minutes"
+                v-model="form.minutes"
               />
             </div>
             <div class="form-group">
@@ -48,7 +48,7 @@
                 id="registerPass"
                 placeholder="sitio da corrida"
                 required
-                v-model="place"
+                v-model="form.place"
               />
             </div>
             <button type="submit" class="button float-right">
@@ -64,9 +64,13 @@
 <script>
 export default {
   data: () => ({
-    name: "",
-    minutes: "",
-    place: ""
+    runs: [],
+    form: {
+      id: "",
+      name: "",
+      minutes: "",
+      place: ""
+    }
   }),
   created: function() {
     window.addEventListener("unload", this.saveStorage);
@@ -74,13 +78,25 @@ export default {
       this.$store.state.runs = JSON.parse(localStorage.getItem("runs"));
     }
   },
+
   methods: {
+    getLastId() {
+      if (this.runs.length) return this.runs[this.runs.length - 1].form.id;
+      else return 0;
+    },
     register() {
-      this.$store.commit("REGISTER", {
-        name: this.name,
-        minutes: this.minutes,
-        place: this.place
-      });
+      if (this.runs !== "") {
+        this.$store.commit("REGISTER", {
+          id: this.getLastId,
+          name: this.form.name,
+          minutes: this.form.minutes,
+          place: this.form.place
+        });
+      }
+    },
+
+    saveStorage() {
+      localStorage.setItem("runs", JSON.stringify(this.runs));
     }
   }
 };
