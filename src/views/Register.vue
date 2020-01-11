@@ -1,13 +1,6 @@
 <template>
   <div id="fromrRegister">
     <br />
-    <div style="text-align:center">
-      <a
-        ><router-link style="color: black; text-decoration: none;" to="/home"
-          >Menu</router-link
-        ></a
-      >
-    </div>
     <br />
     <br />
     <div class="container">
@@ -25,7 +18,7 @@
                 id="registerName"
                 placeholder="Insira o seu nome da corrida"
                 required
-                v-model="form.name"
+                v-model="name"
               />
             </div>
             <div class="form-group">
@@ -37,7 +30,7 @@
                 aria-describedby="emailHelp"
                 placeholder="minutos"
                 required
-                v-model="form.minutes"
+                v-model="minutes"
               />
             </div>
             <div class="form-group">
@@ -48,7 +41,7 @@
                 id="registerPass"
                 placeholder="sitio da corrida"
                 required
-                v-model="form.place"
+                v-model="place"
               />
             </div>
             <button type="submit" class="button float-right">
@@ -64,39 +57,29 @@
 <script>
 export default {
   data: () => ({
-    runs: [],
-    form: {
-      id: "",
-      name: "",
-      minutes: "",
-      place: ""
-    }
+    id: 0,
+    name: "",
+    minutes: 0,
+    place: ""
   }),
-  created: function() {
-    window.addEventListener("unload", this.saveStorage);
-    if (localStorage.getItem("runs")) {
-      this.$store.state.runs = JSON.parse(localStorage.getItem("runs"));
-    }
-  },
-
   methods: {
     getLastId() {
-      if (this.runs.length) return this.runs[this.runs.length - 1].form.id;
+      if (this.$store.state.runs.length || this.$store.state.runs.length !== 0)
+        return this.$store.state.runs[this.$store.state.runs.length - 1].id;
       else return 0;
     },
     register() {
-      if (this.runs !== "") {
-        this.$store.commit("REGISTER", {
-          id: this.getLastId,
-          name: this.form.name,
-          minutes: this.form.minutes,
-          place: this.form.place
-        });
-      }
-    },
-
-    saveStorage() {
-      localStorage.setItem("runs", JSON.stringify(this.runs));
+      this.$store.commit("REGISTER", {
+        id: this.getLastId() + 1,
+        name: this.name,
+        minutes: this.minutes,
+        place: this.place
+      });
+    }
+  },
+  beforeMount() {
+    if (this.$store.state.runs) {
+      localStorage.setItem("runs", JSON.stringify(this.$store.state.runs));
     }
   }
 };

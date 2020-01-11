@@ -2,19 +2,22 @@
   <div id="app">
     <br />
     <br />
+    <div style="text-align:center">
+      <a
+        ><router-link style="color: black; text-decoration: none;" to="/"
+          >Menu</router-link
+        ></a
+      >
+    </div>
     <router-view></router-view>
     <br />
   </div>
 </template>
 
 <script>
-
-
 export default {
   name: "app",
-  components: {
-  
-  }
+  components: {}
 };
 </script>
 <style>

@@ -1,10 +1,5 @@
 <template>
   <div id="app" class="" style="text-align:center">
-    <a
-      ><router-link style="color: black; text-decoration: none;" to="/home"
-        >Menu</router-link
-      ></a
-    >
     <div class="container">
       <br />
       <br />
@@ -28,7 +23,7 @@
             <tr
               style="text-align:center"
               v-for="run in this.$store.state.runs"
-              :key="run.id"
+              :key="run.name"
             >
               <td class="align-middle">{{ run.name }}</td>
               <td class="align-middle">{{ run.minutes }}</td>
@@ -44,7 +39,7 @@
               <td class="align-middle">
                 <button
                   style="border:none; background-color:white"
-                  @click="removeRun(run.id)"
+                  @click="removeRun(run.name)"
                 >
                   🗑️
                 </button>
@@ -114,16 +109,17 @@ export default {
     editRun(id) {
       document.getElementById("editRunsDialog").showModal();
 
-      const run = this.runs.map(run => run.form.id === id)[0];
-      this.editId = run.form.id;
-      this.editName = run.form.name;
-      this.editMinutes = run.form.minutes;
-      this.editPlace = run.form.place;
+      const run = this.runs.map(run => run.id === id)[0];
+      this.editName = run.name;
+      this.editMinutes = run.minutes;
+      this.editPlace = run.place;
     },
     updateRuns() {
       this.runs.map(run => {
-        if (run.form.id === this.editId) {
-          run.form.name = this.editName;
+        if (run.id === this.editId) {
+          (run.name == this.editName) &
+            (run.minutes == this.editMinutes) &
+            (run.place == this.editPlace);
         }
       });
       document.getElementById("editRunsDialog").close();
@@ -135,13 +131,7 @@ export default {
         });
       }
     },
-    changeRunName(name1) {
-      if (confirm("Deseja mesmo o nome da corrida?")) {
-        this.$store.commit("CHANGE_NAME_RUN", {
-          name: name1
-        });
-      }
-    },
+
     compareName(a, b) {
       if (a.name < b.name) return -1;
       if (a.name > b.name) return 1;
