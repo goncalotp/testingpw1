@@ -50,7 +50,7 @@
       </div>
 
       <dialog id="editRunsDialog">
-        <form @submit.prevent="updateRuns(run.id)" method="dialog">
+        <form @submit.prevent="updateRuns()" method="dialog">
           <input
             v-model="editName"
             type="text"
@@ -95,14 +95,12 @@ export default {
 
       const run = this.$store.state.runs.filter(run => run.id === id)[0];
       this.editId = run.id;
-      this.editName = run.name;
     },
-    updateRuns(id) {
-      this.state.commit("UPDATE_RUN", {
-        editId: id,
-        editName: name
-      });
 
+    updateRuns() {
+      this.$store.commit("UPDATE_RUN", {
+        name: this.editName
+      });
       document.getElementById("editRunsDialog").close();
     },
     removeRun(name1) {

@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    runSelected: "",
     runs: [
       {
         id: 0,
@@ -16,7 +17,11 @@ export default new Vuex.Store({
       }
     ]
   },
-  getters: {},
+  getters: {
+    runId(state) {
+      return state.runSelected;
+    }
+  },
   mutations: {
     REGISTER(state, payload) {
       if (!state.runs.some(runs => runs.name === payload.name)) {
@@ -45,6 +50,10 @@ export default new Vuex.Store({
       }
     },
 
+    SELECT_RUN(state, payload) {
+      state.runSelected = payload.idRun;
+    },
+
     REMOVE_RUN(state, payload) {
       state.runs = state.runs.filter(run => run.name !== payload.name);
       localStorage.setItem("runs", JSON.stringify(this.state.runs));
@@ -57,7 +66,7 @@ export default new Vuex.Store({
       if (state.runs.some(runs => runs.id === payload.id)) {
         state.runs[payload.id].name = payload.name;
       }
-      localStorage.setItem("runs", JSON.stringify(this.state.runs));
+      localStorage.setItem("users", JSON.stringify(this.state.users));
     }
   }
 });
